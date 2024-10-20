@@ -8,13 +8,13 @@ import sys
 def main(
     region: str="US-CAL",
     start_hour: int=800,
-    interval: int=12*24*60,
+    interval: int=24*60,
     mem_old: int = 512,
     mem_new: int = 512,
     app_list: list = None,
     server_pair: list = ['i3','m5zn'],
     kat_time:list = [i for i in range(0,31)],
-    optimizer: str = 'eco-life',
+    optimizer: str = 'ga',
     STlambda:float = 0.5,
     window_size: int = 20,
     pso_size: int = 15
@@ -48,6 +48,9 @@ def main(
         optimizer = oracle.oracle(traces,trace_function_names,server_pair,carbon_intensity,ci_avg,STlambda, window_size,interval) 
         optimizer.optimize() 
     elif optimizer == "eco-life":
+        optimizer = tech.tech(traces,trace_function_names,server_pair,kat_time,STlambda,carbon_intensity,window_size,mem_old,mem_new,ci_max,function_mem_trace,pso_size,region,interval)
+        optimizer.optimize()
+    elif optimizer == "ga":
         optimizer = tech.tech(traces,trace_function_names,server_pair,kat_time,STlambda,carbon_intensity,window_size,mem_old,mem_new,ci_max,function_mem_trace,pso_size,region,interval)
         optimizer.optimize()
     else: 

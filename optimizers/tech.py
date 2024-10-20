@@ -3,7 +3,7 @@ import sys
 sys.path.append("..") 
 import utils
 import exe_decide
-import pso
+import GA
 from pathlib import Path
 import json
 import time
@@ -119,7 +119,7 @@ class tech:
                     sum_per_function +=concurrent_function
                     sum1+=concurrent_function
                     #execute function:
-                    st_per_func,carbon_per_func,result_st[i],result_carbon[i] = exe_decide.exe_loc_decision(old_warm_pool, 
+                    st_per_func,carbon_per_func,result_st[i],result_carbon[i] = exe_decide.exe_loc_decision(old_warm_pool,
                      new_warm_pool,
                      i,
                      concurrent_function,
@@ -144,7 +144,7 @@ class tech:
                     if i not in new_function:
                         #first invoke set the pso optimzier
                         parameters = [self.pso_size,self.kat_time, self.st_lambda]
-                        new_function[i]= pso.PSO(parameters,self.server_pair,function_name,self.ci_avg,self.carbon_intensity[j],invoke_interval[i][j-self.window_size])
+                        new_function[i]= GA.GA(parameters,self.server_pair,function_name,self.ci_avg,self.carbon_intensity[j],invoke_interval[i][j-self.window_size])
                         a,_ = new_function[i].main(self.carbon_intensity[j],invoke_interval[i][j-self.window_size])
                         decision = a
                         ka_loc = int(decision[0])
@@ -234,7 +234,7 @@ class tech:
             # print(f"discard funcions: {sum_discard}")
             print(f"current service time is:{sum_st/sum1}, carbon is: {sum_carbon/sum1}")
         print(f"service time is:{sum_st/sum1}, carbon is: {sum_carbon/sum1}")
-        with open(f"{Path(__file__).parents[1]}/results/eco_life/carbon.json", "w") as file:
+        with open(f"{Path(__file__).parents[1]}/results/genetic_algorithm/carbon.json", "w") as file:
             json.dump(result_carbon, file, indent=4)
-        with open(f"{Path(__file__).parents[1]}/results/eco_life/st.json", "w") as file:
+        with open(f"{Path(__file__).parents[1]}/results/genetic_algorithm/st.json", "w") as file:
             json.dump(result_st, file, indent=4)
